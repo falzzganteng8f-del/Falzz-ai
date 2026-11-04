@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || "0.0.0.0";
-const API_URL = process.env.NEXA_API_URL || "https://api.nexadev.my.id/ai/deepsek/";
+const API_URL = process.env.NEXA_API_URL || "http://api.nexadev.my.id/ai/gpt4";
 const DATA_DIR = path.join(__dirname, "data");
 const DB_FILE = path.join(DATA_DIR, "chats.json");
 const MAX_HISTORY = Math.max(6, Math.min(60, Number(process.env.MAX_HISTORY_MESSAGES || 24)));
@@ -53,15 +53,7 @@ function getChat(id) {
   if (!db[id]) db[id] = { history: [], memory: "", personality: "Ramah, jelas, teliti, dan membantu. Jawab dalam Bahasa Indonesia kecuali diminta lain.", updatedAt: Date.now() };
   return db[id];
 }
-function extractAnswer(payload) {
-  if (typeof payload === "string") return payload;
-  if (!payload || typeof payload !== "object") return JSON.stringify(payload);
-  for (const key of ["result", "answer", "response", "message", "text", "output"]) {
-    if (typeof payload[key] === "string" && payload[key].trim()) return payload[key];
-  }
-  if (payload.data) return extractAnswer(payload.data);
-  return JSON.stringify(payload);
-}
+
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "FALZZ AI", time: new Date().toISOString() }));
 
@@ -71,7 +63,27 @@ app.get("/api/history", (req, res) => {
   const chat = getChat(id);
   res.json({ history: chat.history, memory: chat.memory, personality: chat.personality });
 });
+function extractAnswer(payload) {
+  if (typeof payload === "string") return payload;
+  if (!payload || typeof payload !== "object") return "";
 
+  for (const key of [
+    "result",
+    "answer",
+    "response",
+    "message",
+    "text",
+    "output"
+  ]) {
+    if (typeof payload[key] === "string" && payload[key].trim()) {
+      return payload[key];
+    }
+  }
+
+  if (payload.data) return extractAnswer(payload.data);
+
+  return JSON.stringify(payload);
+}
 app.delete("/api/history", async (req, res) => {
   const id = sessionId(req);
   if (!id) return res.status(400).json({ error: "Session ID tidak valid." });
@@ -113,7 +125,7 @@ app.post("/api/chat", async (req, res) => {
   const context = recent.map(m => `${m.role === "user" ? "Pengguna" : "FALZZ AI"}: ${m.content}`).join("\n\n");
   const prompt = `${system}\n\nRiwayat percakapan:\n${context}\n\nPengguna: ${message}\n\nFALZZ AI:`;
   const url = new URL(API_URL);
-  url.searchParams.set("text", prompt);
+  url.searchParams.set("q", prompt);
 
   try {
     const response = await fetch(url, { method: "GET", headers: { "Accept": "application/json, text/plain" }, signal: AbortSignal.timeout(45_000) });
@@ -123,7 +135,8 @@ app.post("/api/chat", async (req, res) => {
     }
     let payload;
     try { payload = JSON.parse(raw); } catch { payload = raw; }
-    const answer = extractAnswer(payload);
+    const answer = 
+(payload);
     if (!answer || answer === "null") return res.status(502).json({ error: "Respons AI kosong atau formatnya belum dikenali.", raw: raw.slice(0, 500) });
     chat.history.push({ role: "user", content: message, at: Date.now() });
     chat.history.push({ role: "assistant", content: answer, at: Date.now() });

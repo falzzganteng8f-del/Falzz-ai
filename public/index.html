@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090e19"><title>FALZZ AI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">✦</div><div><b>FALZZ AI</b><small>PERSONAL INTELLIGENCE</small></div></div>
+    <button class="new-chat" id="newChat">＋　Chat baru</button>
+    <div class="side-label">WORKSPACE</div>
+    <button class="nav active" data-panel="chat">◈　Percakapan</button>
+    <button class="nav" data-panel="search">⌕　Pencarian web</button>
+    <button class="nav" data-panel="memory">▤　Memori & kepribadian</button>
+    <div class="side-bottom"><span class="dot"></span> Sistem siap <small>v1.0.0</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button class="mobile-menu" id="menu">☰</button><div><span class="eyebrow">YOUR AI WORKSPACE</span><b id="pageTitle">Percakapan</b></div><div class="status"><i></i> ONLINE</div></header>
+    <section class="view active" id="chatView">
+      <div class="welcome" id="welcome"><div class="orb">✦</div><p class="eyebrow">WELCOME TO YOUR WORKSPACE</p><h1>Halo, ini <span>FALZZ AI.</span></h1><p>Asisten AI untuk belajar, berpikir, dan membangun sesuatu.</p>
+        <div class="suggestions"><button data-prompt="Jelaskan Node.js dengan contoh sederhana.">✧ Belajar Node.js</button><button data-prompt="Bantu saya membuat website modern.">⌘ Buat website</button><button data-prompt="Buatkan contoh program Python dan jelaskan.">⟡ Coding assistant</button></div></div>
+      <div class="messages" id="messages"></div>
+      <div class="composer-wrap"><div class="modebar"><label><input type="checkbox" id="codingMode"> Mode coding</label><span>Enter untuk kirim · Shift+Enter baris baru</span></div><form id="chatForm" class="composer"><textarea id="messageInput" rows="1" placeholder="Tanyakan apa saja kepada FALZZ AI..."></textarea><button id="sendBtn" aria-label="Kirim">↑</button></form><p class="disclaimer">FALZZ AI dapat membuat kesalahan. Periksa informasi penting.</p></div>
+    </section>
+    <section class="view" id="searchView"><div class="page-content"><p class="eyebrow">DISCOVER</p><h1>Pencarian <span>web.</span></h1><p class="muted">Cari ringkasan dan tautan terkait dari DuckDuckGo Instant Answer.</p><form id="searchForm" class="searchbox"><input id="searchInput" placeholder="Cari topik..."><button>Search ↗</button></form><div id="searchResults"></div></div></section>
+    <section class="view" id="memoryView"><div class="page-content"><p class="eyebrow">PERSONALIZATION</p><h1>Atur <span>FALZZ AI.</span></h1><p class="muted">Pengaturan tersimpan di server berdasarkan ID sesi acak perangkat ini.</p><label class="field-label">Kepribadian AI</label><textarea id="personality" class="settings-area" rows="4" placeholder="Contoh: santai, detail, suka memberi contoh..."></textarea><label class="field-label">Memori yang ingin digunakan</label><textarea id="memory" class="settings-area" rows="5" placeholder="Tulis preferensi atau konteks yang ingin diingat AI..."></textarea><div class="actions"><button class="primary" id="saveSettings">Simpan pengaturan</button><button class="secondary" id="clearHistory">Hapus riwayat</button></div><p id="settingsStatus" class="muted"></p><p class="notice">Jangan masukkan kata sandi, alamat rumah, nomor identitas, atau informasi rahasia ke memori.</p></div></section>
+  </main>
+</div>
+<script src="/app.js"></script>
+</body></html>
